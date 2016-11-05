@@ -1,0 +1,581 @@
+<%= form_for(@report) do |f| %>
+<% if @report.errors.any? %>
+<div id="error_explanation">
+    <h2><%= pluralize(@report.errors.count, "error") %>
+        prohibited this report from being saved:</h2>
+
+    <ul>
+        <% @report.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <%= f.label :shift, "Turno" %><br>
+            <%= f.select :shift  , @shifts.collect {|s| [ s ] }, {include_blank: nil}, class: "form-control" %>
+        </div>
+        <div class="form-group ">
+            <%= f.label :date, "Fecha:" %><br>
+            <div class="form-control">
+                <%= f.date_select :date, class: "form-control" %>
+            </div>
+        </div>
+        <div class="form-group">
+            <%= f.label :group_id, "Grupo: "  %><br/>
+            <%= f.select :group_id  , @current_groups.collect {|g| [ g.group_id.name , g.id ] }, {include_blank: nil}, class: "form-control" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :incident, "Incidente: "  %> <%= f.check_box :incident %>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Supervisores</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Senior</td>
+                    <td><%= f.select :senior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.worker.id ] }, {include_blank: "---"}, class: "form-control" %></td>
+                </tr>
+                <tr>
+                    <td>Junior</td>
+                    <td><%= f.select :junior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.worker.id ] }, {include_blank: "---"}, class: "form-control" %></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <input type="checkbox" id="haveAbsences" onclick="showCB()">Hay ausente(s)?
+        <input type="checkbox" id="ShowWorkers" onclick="showAbsencesList()" hidden="true">
+        <span id="ShowWorkersL" hidden="true">
+            Mostrar lista de trabajadores
+        </span>
+
+    </div>
+</div>
+
+<div class="row" id="incident_row" >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Incidente:</b>
+            </center>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descripcion:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <%= f.text_area :incident_comment , class: "form-control"%>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" id="workersList" hidden="true">
+
+    <table class="table" id="workersTable">
+        <thead>
+            <tr>
+                <th class="col-md-2">Cedula</th>
+                <th class="col-md-3">nombre</th>
+                <th class="col-md-7">Causa</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="row">
+    <table class="table" id="observationsTable">
+        <thead>
+            <tr>
+                <th class="col-md-2">Equipo</th>
+                <th class="col-md-2">Down</th>
+                <th class="col-md-2">Ready</th>
+                <th class="col-md-5">Comentarios/Observaciones</th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @report.observations.each do |observation| %>
+            <tr>
+                <td class="col-md-2"><%= observation.equipment.reference %></td>
+                <td class="col-md-2"><%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %></td>
+                <td class="col-md-2"><%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %></td>
+                <td class="col-md-5"><%= observation.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <button type="button" onclick="addRowObservation()" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nueva observacion</button>
+
+</div>
+<br>
+<div class="row">
+    <table class="table" id="taskTable">
+        <thead>
+            <tr>
+                <th class="col-md-2">Equipo</th>
+                <th class="col-md-9">Tareas a realizas/Continuar en el siguiente turno</th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @report.tasks.each do |task| %>
+            <tr>
+                <td class="col-md-2"><%= task.equipment.reference %></td>
+                <td class="col-md-9"><%= task.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <button type="button" onclick="addRowTask()" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nueva tarea por realizar</button>
+
+</div>
+<br>
+<div class="row">
+    <table class="table" id="shotsTable">
+        <thead>
+            <tr>
+                <th class="col-md-11">Voladuras</th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @report.shots.each do |shot| %>
+            <tr>
+                <td class="col-md-11"><%= shot.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <button type="button" onclick="addRowShot()" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nueva Voladura</button>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" id="vehiclesTable">
+            <thead>
+                <tr>
+                    <th class="">Vehiculo</th>
+                    <th class="">Estado</th>
+                    <th class="">Ubicacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (0..((@vehicles.size - 1)/2)).each do |index| %>
+                <tr>
+                    <td>
+                        <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %>
+                        <%= @vehicles[index].reference %>
+                    </td>
+                    <td>
+                        <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status), class: "form-control" %>
+                    </td>
+                    <td>
+                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
+                        <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    <% else %>
+                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
+                        <% end %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table" id="vehiclesTable">
+            <thead>
+                <tr>
+                    <th class="">Vehiculo</th>
+                    <th class="">Estado</th>
+                    <th class="">Ubicacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (((@vehicles.size - 1)/2 + 1)..@vehicles.size - 1).each do |index| %>
+                <tr>
+                    <td>
+                        <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %>
+                        <%= @vehicles[index].reference %>
+                    </td>
+                    <td>
+                        <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status ), class: "form-control" %>
+                    </td>
+                    <td>
+                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
+                        <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    <% else %>
+                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
+                        <% end %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="actions">
+    <%= f.submit locals[:button_text], class:"btn btn-primary", disabled:"true"%>
+</div>
+
+<% end %>
+
+<script type="text/javascript">
+
+    var groups = [];
+    var group;
+    var worker = {};
+    <% @current_groups.each do |g| %>
+    group = {};
+    group.workers = [];
+    group.name = '<%= g.group_id.name %>';
+    <% g.workers.each do |w| %>
+    worker = {};
+    worker.id = <%= w.id %>
+    worker.cc = '<%= w.cc %>';
+    worker.name = '<%= w.first_name + " " + w.last_name %>';
+    group.workers.push(worker);
+    <% end %>
+    groups.push(group);
+    <% end %>
+
+    //validaciones
+
+    var validEquipment = false;
+
+    function delete_user(row) {
+        row.closest('tr').remove();
+        enableBtn();
+    }
+
+    function createSelectEquipment(name) {
+        var se = '<select class="form-control" name="' + name + '[equipments][]" id="' + name + '_equipments_">';
+        se += "<option value=''>Selec. Equipo</option>";
+        <%  @equipments.each do |e| %>
+        se += "<option value=" + <%= e.id %> + ">";
+        se += '<%= e.reference %>';
+        se += "</option>";
+        <% end %>
+        se += "</select>";
+        return se;
+    }
+
+    function createTextArea(name) {
+        var ta = '<textarea name="' + name + '[comments][]" id="' + name + '_comments_" class="form-control"></textarea>';
+        return ta;
+    }
+
+    function createTimePicker(name) {
+        var tp = "";
+        tp += "<div class=''>"
+        tp += '<select id="observations_' + name + '_hour_" name="observations[' + name + '][hour][]">';
+        tp += "<option value>--</option>";
+        for (var i = 0; i < 24; i++) {
+            tp += i < 10
+                ? ("<option value=0" + i + ">0" + i + "</option>")
+                : ("<option value=" + i + ">" + i + "</option>");
+        }
+        tp += "</select>";
+        tp += " : ";
+        tp += '<select id="observations_' + name + '_minutes_" name="observations[' + name + '][minutes][]">';
+        tp += "<option value>--</option>";
+        for (var i = 0; i < 60; i++) {
+            tp += i < 10
+                ? ("<option value=0" + i + ">0" + i + "</option>")
+                : ("<option value=" + i + ">" + i + "</option>");
+        }
+        tp += "</select>";
+        tp += "</div>"
+        return tp;
+    }
+
+    function btnDelete() {
+        var btn = "";
+        btn += '<button type="button" onclick ="delete_user($(this))" class="btn btn-danger">'
+        btn += '<i class="fa fa-times"></i>'
+        btn += "</button>"
+        return btn;
+    }
+
+    function addRowObservation() {
+        var row = "<tr>";
+        row += '<div class="row">'
+        row += '<td class="col-md-2" >';
+        row += createSelectEquipment("observations");
+        row += "</td>";
+
+        row += '<td class="col-md-2" >';
+        row += createTimePicker("down");
+        row += "</td>";
+
+        row += '<td class="col-md-2" >';
+        row += createTimePicker("ready");
+        row += "</td>";
+
+        row += '<td class="col-md-5" >';
+        row += createTextArea("observations");
+        row += "</td>";
+
+        row += '<td class="col-md-1">';
+        row += btnDelete();
+        row += '</td>';
+
+        row += '</div>'
+        row += "</tr>";
+        $("#observationsTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
+    }
+
+    function addRowTask() {
+        var row = "<tr>";
+        row += '<div class="row">'
+        row += '<td class="" >';
+        row += createSelectEquipment("tasks");
+        row += "</td>";
+
+        row += '<td class="" >';
+        row += createTextArea("tasks");
+        row += "</td>";
+
+        row += '<td>';
+        row += btnDelete();
+        row += '</td>'
+
+        row += '</div>'
+        row += "</tr>";
+        $("#taskTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
+    }
+
+    function addRowShot() {
+        var row = "<tr>";
+        row += '<div class="row">'
+
+        row += '<td class="col-md-11" >';
+        row += createTextArea("shots");
+        row += "</td>";
+
+        row += '<td class="col-md-1">';
+        row += btnDelete();
+        row += '</td>'
+
+        row += '</div>'
+        row += "</tr>";
+        $("#shotsTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
+    }
+
+    function getGroupByName(name) {
+        for (var group of groups) {
+            if (group.name === name) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    function generateWorkersList(name) {
+        $("#workersTable > tbody").html("");
+        var row = "";
+        var group = getGroupByName(name);
+        for (var worker of group.workers) {
+            row = "<tr>";
+            row += "<div class='row'>";
+
+            row += '<td class="col-md-2">';
+            row += '<input type="checkbox" name="absences[ids][]" id="report_absences_" value="' + worker.id + '">'
+            row += worker.cc
+            row += '</td>';
+
+            row += '<td class="col-md-3">';
+            row += worker.name
+            row += '</td>';
+
+            row += '<td class="col-md-7">';
+            //row += createTextArea("absences");
+            row += '</td>';
+
+            row += "</div>";
+            row += "/<tr>";
+
+            $("#workersTable > tbody:last-child").append(row)
+        }
+    }
+
+    function getGroupName() {
+        return $("#report_group_id option:selected").text();
+    }
+
+    function showAbsencesList() {
+        if ($("#ShowWorkers").prop('checked')) {
+            $("#workersList").show();
+        } else {
+            $("#workersList").hide();
+        }
+    }
+
+    function showCB() {
+        if ($("#haveAbsences").prop('checked')) {
+            $("#ShowWorkers").show();
+            $("#ShowWorkersL").show();
+        } else {
+            $("#ShowWorkers").hide();
+            $("#ShowWorkersL").hide();
+            $("#workersList").hide();
+            $("#ShowWorkers").prop("checked", false);
+            $("#report_absences_").prop("checked", false);
+            $('td[name*="report[absences][]"]').prop("checked", false);
+        }
+    }
+
+    function isValidequipmentValues() {
+        var valid = true;
+        $('[id="observations_equipments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidequipmentComments() {
+        var valid = true;
+        $('[id="observations_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidTaskValues() {
+        var valid = true;
+        $('[id="tasks_equipments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidTaskComments() {
+        var valid = true;
+        $('[id="tasks_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidShotComments() {
+        var valid = true;
+        $('[id="shots_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function enableBtn() {
+        $("input[type='submit']").prop('disabled', !(isValidequipmentValues() && isValidequipmentComments() && isValidTaskValues() && isValidTaskComments() && isValidShotComments()));
+    }
+
+    $(document).ready(function () {
+        addRowObservation();
+        addRowTask();
+        addRowShot();
+        generateWorkersList(getGroupName());
+        
+        $("#incident_row").hide();
+
+        $('#report_group_id').on('change', function () {
+            generateWorkersList(getGroupName());
+        });
+
+        $("#haveAbsences").change(function () {
+            $("input:checkbox[name='report[absences][]']").prop('checked', false);
+        });
+
+        $("input[type='checkbox']").on("click", function () {
+            var row = $(this).parent().next().next();
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                row.append(createTextArea("absences"));
+            } else {
+                row.html("");
+            }
+        });
+        
+        $("#report_incident").on("change", function(){
+            if($("#report_incident").is(':checked')){
+                $("#incident_row").show();
+            }else{
+                $("#incident_row").hide();
+            }
+        });
+
+        $("#observationsTable").on("change", "#observations_equipments_", function (e) {
+            enableBtn();
+        });
+
+        $("#observationsTable").on("input", "#observations_comments_", function (e) {
+            enableBtn();
+        });
+
+        $("#taskTable").on("change", "#tasks_equipments_", function (e) {
+            enableBtn();
+        });
+
+        $("#taskTable").on("input", "#tasks_comments_", function (e) {
+            enableBtn();
+        });
+
+        $("#shotsTable").on("input", "#shots_comments_", function (e) {
+            enableBtn();
+        });
+
+    });
+</script>

@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-md-3"><%= image_tag("drummond.png", :alt => "", :height => "75") %></div>
+    <div class="col-md-9">
+        <h1>Nuevo reporte de cambio de turno</h1>
+    </div>
+</div>
+
+<br></br>
+
+<%= render 'form' , locals: {button_text: "Crear Reporte"}%>
+
+<%= link_to 'Volver', reports_path %>
+
+<br></br>

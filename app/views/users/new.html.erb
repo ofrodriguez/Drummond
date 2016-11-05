@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <h2>Nuevo Usuario</h2>
+
+    <%= form_for @user, :url => { :action => "create" } do |f| %>
+
+      <% if (@user.errors.any? || @worker.errors.any?)%>
+        <div id="error_explanation">
+          <h2>No se pudo crear el Usuario por lo siguiente:</h2>
+
+          <ul>
+          <%if @worker.errors.any? %>
+            <% @worker.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          <% end %>
+          <%if @user.errors.any? %>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <div class="form-group">
+        <%= label_tag "worker_id", "Seleccionar un trabajador previo:"  %><br />
+        <%= select "worker", "id" , @workers.collect {|w| [ w.cc.to_s + " " + w.first_name + " " + w.last_name, w.id ] }, {include_blank: 'Crear nuevo trabajador'}, class: "form-control" %>
+      </div>
+      
+      <div class="form-group" id="div_cc">
+        <%= label_tag "worker[cc]", "Cedula"  %><br />
+        <%= text_field_tag "worker[cc]" , nil , placeholder:"Cedula" ,class: "form-control" %>
+      </div>
+
+      <div class="form-group" id="div_first_name">
+        <%= label_tag "worker[first_name]", "Nombres"  %><br />
+        <%= text_field_tag "worker[first_name]" , nil , placeholder:"Nombres" ,class: "form-control" %>
+      </div>
+
+      <div class="form-group" id="div_last_name">
+        <%= label_tag "worker[last_name]", "Apellidos"  %><br />
+        <%= text_field_tag "worker[last_name]" , nil , placeholder:"Apellidos" ,class: "form-control" %>
+      </div>      
+
+      <div class="form-group">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autofocus: true, placeholder:"Email" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "Contraseña" %>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "off", placeholder:"Contraseña" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirmar contraseña" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off", placeholder:"Confirmar contraseña" ,class:"form-control" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Crear usuario" ,class:"btn btn-primary"%>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<script>
+  $( "#worker_id" ).change(function() {
+    if($( "#worker_id" ).val() === ""){
+      //Mostar fields
+      $("#worker_cc").prop('disabled', false);
+      $("#worker_first_name").prop('disabled', false);
+      $("#worker_last_name").prop('disabled', false);
+      
+      $("#div_cc").show();
+      $("#div_first_name").show();
+      $("#div_last_name").show();
+      
+      
+    }else{
+      $("#worker_cc").prop('disabled', true);
+      $("#worker_first_name").prop('disabled', true);
+      $("#worker_last_name").prop('disabled', true);
+      
+      $("#div_cc").hide();
+      $("#div_first_name").hide();
+      $("#div_last_name").hide();
+
+    }
+  });
+</script>
+
