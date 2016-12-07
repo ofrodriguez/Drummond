@@ -144,7 +144,7 @@ user.save!
 	Equipment.create(reference: '25JB')
 	Equipment.create(reference: 'Cable Tower')
 	Equipment.create(reference: 'Panel Board')
-
+	Equipment.create(reference: 'Apron Feeder')
 	#Vehicules
 
 	Vehicle.create(reference: '1016')

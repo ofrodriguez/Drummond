@@ -1,24 +1,3 @@
-#default: &default
-#  adapter: mysql2
-#  encoding: utf8
-#  pool: 5
-#  username: root
-#  password: "andres10"
-#  socket: /var/run/mysqld/mysqld.sock
-
-#development:
-#  <<: *default
-#  database: drummond_development
-
-#test:
-#  <<: *default
-#  database: drummond_test
-
-#production:
-#  <<: *default
-#  database: drummond_production
-#  username: drummond
-#  password: <%= ENV['DRUMMOND_DATABASE_PASSWORD'] %>
 
 default: &default
   adapter: sqlite3

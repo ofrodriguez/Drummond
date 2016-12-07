@@ -6,13 +6,15 @@
 <div class="panel panel-default">
     <!-- Default panel contents -->
     <div class="panel-heading">Historico</div>
-    <table class="table">
+    <table class="table" id="equipmentHistoric">
         <thead>
             <tr>
-                <th class="col-md-2">Fecha</th>
-                <th class="col-md-2">Down</th>
-                <th class="col-md-2">Ready</th>
-                <th class="col-md-6">Comentarios</th>
+                <th class="col-md-1">Fecha</th>
+                <th class="col-md-1">Down</th>
+                <th class="col-md-1">Ready</th>
+                <th class="col-md-3">Comentarios</th>
+                <th class="col-md-3">Problema Principal</th>
+                <th class="col-md-3">Causa</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +24,8 @@
                 <td><%= "#{eb.down.hour < 10 ? ("0"+eb.down.hour.to_s):(eb.down.hour)}:#{eb.down.min < 10 ? ("0"+eb.down.min.to_s):(eb.down.min)}" if !eb.down.nil? %></td>
                 <td><%= "#{eb.ready.hour < 10 ? ("0"+eb.ready.hour.to_s):(eb.ready.hour)}:#{eb.ready.min < 10 ? ("0"+eb.ready.min.to_s):(eb.ready.min)}" if !eb.ready.nil? %></td>
                 <td><%= eb.comment %></td>
+                <td><%= eb.main_problem %></td>
+                <td><%= eb.cause %></td>
             </tr>
             <% end %>
         </tbody>
@@ -31,3 +35,46 @@
 <%= link_to 'Editar', edit_equipment_path(@equipment) if current_user.is_admin?%>
 |
 <%= link_to 'Volver', equipment_index_path %>
+
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#equipmentHistoric";
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>
+
+

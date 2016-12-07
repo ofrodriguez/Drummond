@@ -33,12 +33,16 @@ gem 'devise'
 
 gem 'pg'
 
+gem 'time_difference'
+
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
+
 group :development do
-	gem 'rails_12factor'
-	gem 'puma'
+  gem 'rails_12factor'
+  gem 'puma'
 end
 
 # Use ActiveModel has_secure_password
