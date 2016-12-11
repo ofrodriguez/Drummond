@@ -255,14 +255,13 @@
 <% end %>
 
 <script type="text/javascript">
-
     var groups = [];
     var group;
     var problemasPrincipales = ["Electrico", "Mecanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado"];
     
     var causasElectricas = ["Monitor", "Sobrecorriente instantanea(OL)", "Falla a tierra", "Efecto Corona", 
                             "Sobrecalentamiento", "Conexiones sueltas/flojas", "Fase perdida", "Banco de condensadores", 
-                            "Equipo de potencia dañado", "Aislamiento defectuoso", "Si falla evidente"];
+                            "Equipo de potencia dañado", "Aislamiento defectuoso", "Sin falla evidente"];
     var causasMecanicas = ["Rodamientos", "Vibracion", "Alta temperatura", "Ventilacion defectuosa",
                             "Desalineamiento", "Engrase"];
     var causasControl = ["Conexiones flojas", "Mala conexion", "Dispositivo de proteccion dañado", "Variador de velocidad",
@@ -275,15 +274,16 @@
     var causasEquiposMina = ["Trabajos de PM", "Engrase/Vibracion/Temperatura"];
     var causasEquiposElectricos = ["Limpieza General", "Ajuste conexiones", "Pruebas/Inspecion/Cambio Comp.", "Revision NGR"];
     
+    var causasCableado = ["Nueva Ruta","Modificación Ruta","Movimiento por Vol adura","Cable de avance","Movimiento subestaciones","Movimientos VCB","Movimientos MCC","Conexión de equipos","Desconexión de equipos"];
     //var causas = [causasElectricas, causasElectricas, causasMecanicas, causasControl. causasEquiposMina, causasEquiposElectricos];
     
     var causas = {
         "Electrico": causasElectricas,
-        "Macanica": causasMecanicas,
+        "Mecanica": causasMecanicas,
         "Control": causasControl,
         "PM-equipos-mina": causasEquiposMina,
         "PM-equipos-electricos": causasEquiposElectricos,
-        "Cableado": causasEquiposElectricos
+        "Cableado": causasCableado 
     };
     
     var ausencias = ["Permiso", "Entrenamiento", "Ausente", "Vacaciones", "Incapacidad"];
@@ -302,16 +302,12 @@
         <% end %>
         groups.push(group);
     <% end %>
-
     //validaciones
-
     var validEquipment = false;
-
     function delete_user(row) {
         row.closest('tr').remove();
         enableBtn();
     }
-
     function createSelectEquipment(name) {
         var se = '<select class="form-control" name="' + name + '[equipments][]" id="' + name + '_equipments_">';
         se += "<option value=''>Selec. Equipo</option>";
@@ -361,12 +357,10 @@
         se += "</select>";
         return se;;
     }
-
     function createTextArea(name) {
         var ta = '<textarea name="' + name + '[comments][]" id="' + name + '_comments_" class="form-control"></textarea>';
         return ta;
     }
-
     function createTimePicker(name) {
         var tp = "";
         tp += "<div class=''>"
@@ -390,7 +384,6 @@
         tp += "</div>"
         return tp;
     }
-
     function btnDelete() {
         var btn = "";
         btn += '<button type="button" onclick ="delete_user($(this))" class="btn btn-danger">'
@@ -398,22 +391,18 @@
         btn += "</button>"
         return btn;
     }
-
     function addRowObservation() {
         var row = "<tr>";
         row += '<div class="row">'
         row += '<td class="" >';
         row += createSelectEquipment("observations");
         row += "</td>";
-
         row += '<td class="" >';
         row += createTimePicker("down");
         row += "</td>";
-
         row += '<td class="" >';
         row += createTimePicker("ready");
         row += "</td>";
-
         row += '<td class="" >';
         row += createTextArea("observations");
         row += "</td>";
@@ -425,56 +414,45 @@
         row += '<td class="" >';
         //row += createSelectMainProblem();
         row += "</td>";
-
         row += '<td class="">';
         row += btnDelete();
         row += '</td>';
-
         row += '</div>'
         row += "</tr>";
         $("#observationsTable > tbody:last-child").append(row);
         $("input[type='submit']").prop('disabled', true);
     }
-
     function addRowTask() {
         var row = "<tr>";
         row += '<div class="row">'
         row += '<td class="" >';
         row += createSelectEquipment("tasks");
         row += "</td>";
-
         row += '<td class="" >';
         row += createTextArea("tasks");
         row += "</td>";
-
         row += '<td>';
         row += btnDelete();
         row += '</td>'
-
         row += '</div>'
         row += "</tr>";
         $("#taskTable > tbody:last-child").append(row);
         $("input[type='submit']").prop('disabled', true);
     }
-
     function addRowShot() {
         var row = "<tr>";
         row += '<div class="row">'
-
         row += '<td class="col-md-11" >';
         row += createTextArea("shots");
         row += "</td>";
-
         row += '<td class="col-md-1">';
         row += btnDelete();
         row += '</td>'
-
         row += '</div>'
         row += "</tr>";
         $("#shotsTable > tbody:last-child").append(row);
         $("input[type='submit']").prop('disabled', true);
     }
-
     function getGroupByName(name) {
         for (var group of groups) {
             if (group.name === name) {
@@ -483,7 +461,6 @@
         }
         return null;
     }
-
     function generateWorkersList(name) {
         $("#workersTable > tbody").html("");
         var row = "";
@@ -491,31 +468,24 @@
         for (var worker of group.workers) {
             row = "<tr>";
             row += "<div class='row'>";
-
             row += '<td class="col-md-2">';
             row += '<input type="checkbox" name="absences[ids][]" id="report_absences_" value="' + worker.id + '">'
             row += worker.cc
             row += '</td>';
-
             row += '<td class="col-md-3">';
             row += worker.name
             row += '</td>';
-
             row += '<td class="col-md-7">';
             //row += createTextArea("absences");
             row += '</td>';
-
             row += "</div>";
             row += "/<tr>";
-
             $("#workersTable > tbody:last-child").append(row)
         }
     }
-
     function getGroupName() {
         return $("#report_group_id option:selected").text();
     }
-
     function showAbsencesList() {
         if ($("#ShowWorkers").prop('checked')) {
             $("#workersList").show();
@@ -523,7 +493,6 @@
             $("#workersList").hide();
         }
     }
-
     function showCB() {
         if ($("#haveAbsences").prop('checked')) {
             $("#ShowWorkers").show();
@@ -537,7 +506,6 @@
             $('td[name*="report[absences][]"]').prop("checked", false);
         }
     }
-
     function isValidequipmentValues() {
         var valid = true;
         $('[id="observations_equipments_"]').each(function () {
@@ -548,7 +516,6 @@
         });
         return valid;
     }
-
     function isValidequipmentComments() {
         var valid = true;
         $('[id="observations_comments_"]').each(function () {
@@ -559,7 +526,6 @@
         });
         return valid;
     }
-
     function isValidTaskValues() {
         var valid = true;
         $('[id="tasks_equipments_"]').each(function () {
@@ -570,7 +536,6 @@
         });
         return valid;
     }
-
     function isValidTaskComments() {
         var valid = true;
         $('[id="tasks_comments_"]').each(function () {
@@ -581,7 +546,6 @@
         });
         return valid;
     }
-
     function isValidShotComments() {
         var valid = true;
         $('[id="shots_comments_"]').each(function () {
@@ -592,13 +556,34 @@
         });
         return valid;
     }
-
+    function isValidequipmentMainCauses() {
+        var valid = true;
+        $('[id="observations_main_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        console.log(valid);
+        return valid;
+    }
+    function isValidequipmentCauses() {
+        var valid = true;
+        $('[id="observations_causes_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        console.log(valid);
+        return valid;
+    }
+    
     function enableBtn() {
-        $("input[type='submit']").prop('disabled', !(isValidequipmentValues() && isValidequipmentComments() && isValidTaskValues() && isValidTaskComments() && isValidShotComments()));
+        $("input[type='submit']").prop('disabled', !(isValidequipmentValues() && isValidequipmentComments() && isValidTaskValues() && isValidTaskComments() && isValidShotComments() && isValidequipmentMainCauses() && isValidequipmentCauses()));
     }
     
     
-
     $(document).ready(function () {
         addRowObservation();
         addRowTask();
@@ -606,11 +591,9 @@
         generateWorkersList(getGroupName());
         
         $("#incident_row").hide();
-
         $('#report_group_id').on('change', function () {
             generateWorkersList(getGroupName());
         });
-
         $("#haveAbsences").change(function () {
             $("input:checkbox[name='report[absences][]']").prop('checked', false);
         });
@@ -641,26 +624,26 @@
             row.html("");
             row.append(createSelectCauses(causas[option]));
         });
-
         $("#observationsTable").on("change", "#observations_equipments_", function (e) {
             enableBtn();
         });
-
+        $("#observationsTable").on("change", "#observations_main_", function (e) {
+            enableBtn();
+        });
+        $("#observationsTable").on("change", "#observations_causes_", function (e) {
+            enableBtn();
+        });
         $("#observationsTable").on("input", "#observations_comments_", function (e) {
             enableBtn();
         });
-
         $("#taskTable").on("change", "#tasks_equipments_", function (e) {
             enableBtn();
         });
-
         $("#taskTable").on("input", "#tasks_comments_", function (e) {
             enableBtn();
         });
-
         $("#shotsTable").on("input", "#shots_comments_", function (e) {
             enableBtn();
         });
-
     });
 </script>
