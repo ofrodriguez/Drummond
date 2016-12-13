@@ -257,24 +257,23 @@
 <script type="text/javascript">
     var groups = [];
     var group;
-    var problemasPrincipales = ["Electrico", "Mecanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado"];
+    var problemasPrincipales = ["Electrico", "Mecanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado","Producción"];
     
     var causasElectricas = ["Monitor", "Sobrecorriente instantanea(OL)", "Falla a tierra", "Efecto Corona", 
-                            "Sobrecalentamiento", "Conexiones sueltas/flojas", "Fase perdida", "Banco de condensadores", 
-                            "Equipo de potencia dañado", "Aislamiento defectuoso", "Sin falla evidente"];
+                            "Sobrecalentamiento", "Conexiones sueltas/flojas", "Fase perdida", "Banco de condensadores","Equipo de potencia dañado", "Aislamiento defectuoso", "Sin falla evidente","Cambio de TAP","Circuito de Alumbrado"];
     var causasMecanicas = ["Rodamientos", "Vibracion", "Alta temperatura", "Ventilacion defectuosa",
                             "Desalineamiento", "Engrase"];
-    var causasControl = ["Conexiones flojas", "Mala conexion", "Dispositivo de proteccion dañado", "Variador de velocidad",
-                         "Contactor dañado", "Rele auxiliar dañado"];
+    var causasControl = ["Conexiones flojas", "Mala conexion", "Dispositivo de proteccion dañado", "Variador de velocidad","Contactor dañado", "Rele auxiliar dañado","Ajuste de Parametros"];
     /*var causasEquiposMina = ["Circuito de alta", "caja 8x8", "Tambor", "Colector central", "Banco de resistencias",
                              "Revision de ruta", "Engrase", "Toma de vibracion", "Toma de temperatura", "PT-100", 
                              "Revision escobillas generadoras", "Revision esbolillas motores", "Revision Ventiladores", 
                              "Pruebas IP", "Circuito monitor", "Revision variadores", "Revision transformadores", "Limpieza",
                              "Ajuste conexiones"];*/
     var causasEquiposMina = ["Trabajos de PM", "Engrase/Vibracion/Temperatura"];
-    var causasEquiposElectricos = ["Limpieza General", "Ajuste conexiones", "Pruebas/Inspecion/Cambio Comp.", "Revision NGR"];
+    var causasEquiposElectricos = ["Limpieza General", "Ajuste conexiones", "Pruebas/Inspecion/Cambio Componentes", "Revision NGR"];
     
-    var causasCableado = ["Nueva Ruta","Modificación Ruta","Movimiento por Vol adura","Cable de avance","Movimiento subestaciones","Movimientos VCB","Movimientos MCC","Conexión de equipos","Desconexión de equipos"];
+    var causasCableado = ["Nueva Ruta","Modificación Ruta","Movimiento por Vol adura","Cable de avance","Movimiento subestaciones","Movimientos VCB","Movimientos MCC","Conexión de equipos","Desconexión de equipos","Reparaciones Taller"];
+    var causasProducción = ["Conexión/Desconexión AF","Movimientos por Voladura","Caminata de Pala","Caminata de Draga"];
     //var causas = [causasElectricas, causasElectricas, causasMecanicas, causasControl. causasEquiposMina, causasEquiposElectricos];
     
     var causas = {
@@ -283,7 +282,8 @@
         "Control": causasControl,
         "PM-equipos-mina": causasEquiposMina,
         "PM-equipos-electricos": causasEquiposElectricos,
-        "Cableado": causasCableado 
+        "Cableado": causasCableado,
+        "Producción": causasProducción 
     };
     
     var ausencias = ["Permiso", "Entrenamiento", "Ausente", "Vacaciones", "Incapacidad"];

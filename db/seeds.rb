@@ -141,7 +141,7 @@ user.save!
 	Equipment.create(reference: 'Shop 777')
 	Equipment.create(reference: 'Loader shop')
 	Equipment.create(reference: 'Airport')
-	Equipment.create(reference: 'werlding shop')
+	Equipment.create(reference: 'welding shop')
 	Equipment.create(reference: 'Pump shop')
 	Equipment.create(reference: 'Military base')
 	Equipment.create(reference: 'Light equip Shop')
@@ -230,7 +230,7 @@ user.save!
 	w = Worker.new(first_name:'JEAN', last_name:'MARRUGO', cc:77167542, code:'JOL')
 	w.save!
 	g1.workers.push(w)
-	w = Worker.new(first_name:'JORGE', last_name:'DIAZ MARINEZ', cc:1082935255, code:'JOL')
+	w = Worker.new(first_name:'JORGE', last_name:'DIAZ MARTINEZ', cc:1082935255, code:'JOL')
 	w.save!
 	g1.workers.push(w)
 
@@ -324,7 +324,7 @@ user.save!
 	w = Worker.new(first_name:'JHON', last_name:'TRILLOS', cc:15174088, code:'TR4088')
 	w.save!
 	g3.workers.push(w)
-	w = Worker.new(first_name:'JAIRO', last_name:'QUINTERO', cc:77028902, code:'QU8902')
+	w = Worker.new(first_name:'JEIDER', last_name:'PUELLO', cc:77028902, code:'QU8902')
 	w.save!
 	g3.workers.push(w)
 	w = Worker.new(first_name:'JUAN', last_name:'CHICA', cc:1067712564, code:'JOL')
@@ -348,7 +348,9 @@ user.save!
 	w = Worker.new(first_name:'ADALBERTO', last_name:'MAIGUEL', cc:72146582, code:'JOL')
 	w.save!
 	g3.workers.push(w)
-
+	w = Worker.new(first_name:'JAIRO', last_name:'YEPEZ', cc:72146582, code:'JOL')
+	w.save!
+	g3.workers.push(w)
 	g3.save!
 
 
