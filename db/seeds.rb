@@ -324,7 +324,7 @@ user.save!
 	w = Worker.new(first_name:'JHON', last_name:'TRILLOS', cc:15174088, code:'TR4088')
 	w.save!
 	g3.workers.push(w)
-	w = Worker.new(first_name:'JEIDER', last_name:'PUELLO', cc:77028902, code:'QU8902')
+	w = Worker.new(first_name:'JEIDER', last_name:'PUELLO', cc:12645749, code:'PU5749')
 	w.save!
 	g3.workers.push(w)
 	w = Worker.new(first_name:'JUAN', last_name:'CHICA', cc:1067712564, code:'JOL')
@@ -348,7 +348,7 @@ user.save!
 	w = Worker.new(first_name:'ADALBERTO', last_name:'MAIGUEL', cc:72146582, code:'JOL')
 	w.save!
 	g3.workers.push(w)
-	w = Worker.new(first_name:'JAIRO', last_name:'YEPEZ', cc:72146582, code:'JOL')
+	w = Worker.new(first_name:'JAIRO', last_name:'YEPEZ', cc:84458136, code:'JOL')
 	w.save!
 	g3.workers.push(w)
 	g3.save!
