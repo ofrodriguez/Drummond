@@ -257,7 +257,7 @@
 <script type="text/javascript">
     var groups = [];
     var group;
-    var problemasPrincipales = ["Electrico", "Mecanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado","Producción"];
+    var problemasPrincipales = ["Electrico", "Mecanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado","Producción","Movimientos"];
     
     var causasElectricas = ["Monitor", "Sobrecorriente instantanea(OL)", "Falla a tierra", "Efecto Corona", 
                             "Sobrecalentamiento", "Conexiones sueltas/flojas", "Fase perdida", "Banco de condensadores","Equipo de potencia dañado", "Aislamiento defectuoso", "Sin falla evidente","Cambio de TAP","Circuito de Alumbrado"];
@@ -269,11 +269,12 @@
                              "Revision escobillas generadoras", "Revision esbolillas motores", "Revision Ventiladores", 
                              "Pruebas IP", "Circuito monitor", "Revision variadores", "Revision transformadores", "Limpieza",
                              "Ajuste conexiones"];*/
-    var causasEquiposMina = ["Trabajos de PM", "Engrase/Vibracion/Temperatura"];
+    var causasEquiposMina = ["Trabajos de PM", "Engrase/Vibracion/Temperatura","PM Mecanico","Soporte de personal"];
     var causasEquiposElectricos = ["Limpieza General", "Ajuste conexiones", "Pruebas/Inspecion/Cambio Componentes", "Revision NGR"];
     
-    var causasCableado = ["Nueva Ruta","Modificación Ruta","Movimiento por Vol adura","Cable de avance","Movimiento subestaciones","Movimientos VCB","Movimientos MCC","Conexión de equipos","Desconexión de equipos","Reparaciones Taller"];
+    var causasCableado = ["Nueva Ruta","Modificación Ruta","Cable de avance","Conexión de equipos","Desconexión de equipos","Reparación Cable Taller","Reparación/Cambio de Cable en Campo","Recoger Cable libre","Instalación/Revisión Marquillas","Prueba de Ruta"];
     var causasProducción = ["Conexión/Desconexión AF","Movimientos por Voladura","Caminata de Pala","Caminata de Draga"];
+    var causasMovimientos = ["Movimiento subestaciones","Movimientos VCB","Movimientos MCC"];
     //var causas = [causasElectricas, causasElectricas, causasMecanicas, causasControl. causasEquiposMina, causasEquiposElectricos];
     
     var causas = {
@@ -283,7 +284,8 @@
         "PM-equipos-mina": causasEquiposMina,
         "PM-equipos-electricos": causasEquiposElectricos,
         "Cableado": causasCableado,
-        "Producción": causasProducción 
+        "Producción": causasProducción,
+        "Movimientos": causasMovimientos
     };
     
     var ausencias = ["Permiso", "Entrenamiento", "Ausente", "Vacaciones", "Incapacidad"];

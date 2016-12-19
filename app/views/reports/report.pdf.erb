@@ -144,6 +144,31 @@
             </div>
             <% end %>
         </div>
+                <% if @report.incident %>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <center>
+                        <b>Incidente:</b>
+                    </center>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Descripcion:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <%=@report.incident_comment%>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <% end %>
 
         <% unless @report.observations.empty? %>
         <div class="row">
@@ -273,31 +298,6 @@
         <br>
         <% end %>
         
-        <% if @report.incident %>
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <center>
-                        <b>Incidente:</b>
-                    </center>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Descripcion:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <%=@report.incident_comment%>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <% end %>
 
         <div class="row">
             <div class="panel panel-default">
@@ -330,7 +330,5 @@
                 </div>
             </div>
         </div>
-
-        
     </body>
 </html>
